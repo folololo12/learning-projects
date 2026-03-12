@@ -12,7 +12,7 @@ print(df.describe())
 print(df.isnull().sum())
 print(df["type"].value_counts())
 print(df["country"].value_counts().head(10))
-#tworzenie wizualizacji
+#creating charts
 sns.countplot(x="type", data=df)
 mat.title("Movies vs TV Shows")
 mat.xlabel("Type")
