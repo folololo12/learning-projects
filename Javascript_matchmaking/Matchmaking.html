@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<div>
+    <table id="tabela1" border="1">
+        <tr><th>Druzyna A</th><th>Druzyna B</th><th>Gole A</th><th>Gole B</th></tr>
+
+    </table>
+    <button id="guzik">wygeneruj statystyki</button>
+     <button id="guz">wygeneruj losowe liczby</button>
+      <table id="tabelas" border="1">
+        <tr><th>lp</th><th>Druzyna</th><th>Mecze</th><th>Punkty</th><th>Bramki strzelone</th><th>bramki stracone</th><th>różnica bramek</th></tr>
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+    guzik = document.getElementById("guzik")
+    let statystyki= {}
+  
+tabela = ["druzyna1", "druzyna2","druzyna3", "druzyna4","druzyna5", "druzyna6"]
+
+        
+function tablica(tabela){
+    let leadboard = []
+    for(let i = 0; i< tabela.length; i++){
+        for(let j = i+1; j< tabela.length; j++){
+                leadboard.push([(tabela[i]), (tabela[j])])
+        
+        }
+    }
+    return leadboard
+}
+
+let leadboard = tablica(tabela)
+tabelala = document.getElementById("tabela1")
+leadboard.forEach((element, index) => {
+    tabelala.innerHTML += `<tr><td>${element[0]}</td><td>${element[1]}</td><td><input type=number id=A${index}></td><td><input type=number id=B${index}></td></tr>`
+    
+});
+guzik.addEventListener("click", function () {
+     tabela.forEach(element => {
+        statystyki[element] = {
+            M: 0,
+            PKT: 0,
+            Bplus: 0,
+            Bminus: 0,
+            Roznica: 0,
+        }})
+    let wyn 
+  leadboard.forEach((mecz, index) => {
+    let Mecz1 = mecz[0]
+    let Mecz2 = mecz[1]
+    let GoleA = parseInt(document.getElementById(`A${index}`).value)
+    let GoleB = parseInt(document.getElementById(`B${index}`).value)
+    if (isNaN(GoleA) || isNaN(GoleB) || GoleA < 0 || GoleB < 0) {
+        alert("Wszystkie pola muszą być wypełnione ORAZ LICZBY MUSZA BYC DODATNIE")
+        return false
+    }
+    statystyki[Mecz1].Bminus += GoleB
+    statystyki[Mecz1].Bplus += GoleA
+    statystyki[Mecz2].Bplus += GoleB
+    statystyki[Mecz2].Bminus += GoleA
+    statystyki[Mecz1].M += 1
+    statystyki[Mecz2].M += 1
+    statystyki[Mecz1].Roznica += (GoleA - GoleB)
+    statystyki[Mecz2].Roznica += (GoleB - GoleA) 
+        if(GoleA > GoleB){
+              statystyki[Mecz1].PKT += 3
+        }
+        else if(GoleA < GoleB){
+            statystyki[Mecz2].PKT += 3
+        }
+        else{
+              statystyki[Mecz1].PKT += 1
+              statystyki[Mecz2].PKT += 1
+        }
+  
+})
+ tabela.sort(function(a, b) {
+
+    let pkt = statystyki[b].PKT - statystyki[a].PKT
+    if (pkt !== 0) return pkt
+
+    let bilans = (statystyki[b].Bplus - statystyki[b].Bminus) -
+                 (statystyki[a].Bplus - statystyki[a].Bminus)
+    if (bilans !== 0) return bilans
+
+    return statystyki[b].Bplus - statystyki[a].Bplus
+  
+        })
+        tabelas = document.getElementById("tabelas")
+tabela.forEach((element, index) => {
+    tabelas.innerHTML += `  <tr><td>${index +1}}</td><td>${element}</td><td>${statystyki[element].M}</td><td>${statystyki[element].PKT}</td><td>${statystyki[element].Bplus}</td><td>${statystyki[element].Bminus}</td><td>${statystyki[element].Roznica}</td></tr>`
+    
+});
+
+ 
+
+
+
+ console.log(statystyki)
+  console.log(tabela)
+});
+guz = document.getElementById("guz")
+guz.addEventListener("click", function (){
+     leadboard.forEach((mecz, index) => {
+        let randomliczba1 = Math.round(Math.random() * ((10 - 0) + 0)) 
+        let randomliczba2 = Math.round(Math.random() * ((10 - 0) + 0)) 
+        document.getElementById(`A${index}`).value = randomliczba1
+        document.getElementById(`B${index}`).value = randomliczba2
+        
+
+     })
+})
+
+
+
+    })
+  
+
+
+</script>    
+</body>
+</html>
